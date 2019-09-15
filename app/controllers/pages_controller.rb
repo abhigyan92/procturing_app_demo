@@ -1,5 +1,33 @@
 class PagesController < ApplicationController
   def home
-    @random_number = rand(0...10_000)
+    @user = User.new
+  end
+
+  def create_user
+    @user = User.find_by_email(params[:email])
+    if !@user.present?
+      @user = User.create(email: params[:email])
+    end
+    redirect_to take_test_path(@user)
+  end
+
+  def take_test
+    @user = User.find(params[:user_id])
+  end
+
+  def display_activity_log
+    @user = User.find(params[:user_id])
+    @procturing_events = @user.procturing_events
+
+  end
+
+  def record_event
+    permitted = params.permit(:name, :value, :userId)
+    @user = User.find(permitted[:userId])
+    @procturing_event = @user.procturing_events.build
+    @procturing_event.name = permitted[:name]
+    @procturing_event.value = permitted[:value]
+    @procturing_event.save
+    render :json => @procuring_event
   end
 end

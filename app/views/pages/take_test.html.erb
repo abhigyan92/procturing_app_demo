@@ -1,0 +1,134 @@
+Welcome to the test.
+<span data-user-id="<%= @user.id %>"></span>
+<video id="local-video" autoplay></video>
+<button id="a">alert</button>
+<%= link_to "Submit Test", display_activity_log_path(@user) %>
+<script type="text/javascript">
+let localVideo;
+let el;
+window.onload = () => {
+  localVideo = document.getElementById("local-video");
+};
+var recordedChunks = [];
+function handleStopRecording(){
+  console.log(recordedChunks);
+  var blob = new Blob(recordedChunks, {
+    type: 'video/webm'
+  });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  document.body.appendChild(a);
+  a.style = 'display: none';
+  a.href = url;
+  a.download = 'test.webm';
+  a.click();
+  window.URL.revokeObjectURL(url);
+  window.mediaRecorder.stop();
+
+}
+function handleDataAvailable(event) {
+  console.log(event.data);
+  if (event.data.size > 0) {
+    recordedChunks.push(event.data);
+  } else {
+    // ...
+  }
+}
+function startRecording(stream){
+  var options = {mimeType: 'video/webm;codecs=vp9'};
+  window.mediaRecorder = new MediaRecorder(stream, options);
+  console.log(mediaRecorder);
+  window.mediaRecorder.ondataavailable = handleDataAvailable;
+  window.mediaRecorder.start();
+  console.log(mediaRecorder);
+}
+
+// Initialize user's own video
+document.onreadystatechange = () => {
+  if (document.readyState === "interactive") {
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: false,
+        video: true
+      })
+      .then(stream => {
+        localVideo.srcObject = stream;
+        localVideo.muted = true;
+
+        startRecording(stream);
+      })
+      .catch(logError);
+  }
+  document.getElementById('a').addEventListener('click', function(){
+      openFullscreen();
+  })
+};
+
+
+function fire_event(name,time,value){
+    // do fetch request ot save data.
+    console.log('name -->', name);
+    console.log('time -->', time);
+    console.log('value -->', value);
+    el = document.querySelector('span');
+    var userId = el.getAttribute('data-user-id');
+    var xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "/record_event", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send("name=" + name + "&value=" + value + "&userId=" + userId);
+}
+document.addEventListener('DOMContentLoaded', function(){
+    window.onunload = function(e){
+        fire_event('unload', Date.now());
+    }
+    document.addEventListener('keydown', function(e){
+        fire_event('key_down', Date.now(), e.which);
+    })
+    document.addEventListener('keypress', function(e){
+        fire_event('key_press', Date.now(), e.which);
+    })
+    document.addEventListener('keyup', function(e){
+        fire_event('key_up', Date.now(), e.which);
+    })
+})
+
+window.addEventListener('focus', function(){ fire_event('focus', Date.now()) });
+window.addEventListener('blur', function(){ fire_event('blur', Date.now()) });
+
+
+var elem = document.documentElement;
+function openFullscreen() {
+    fire_event('open_fullscreen',Date.now());
+    if (elem.requestFullscreen) {
+        elem.requestFullscreen();
+    } else if (elem.mozRequestFullScreen) { /* Firefox */
+        elem.mozRequestFullScreen();
+    } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
+        elem.webkitRequestFullscreen();
+    } else if (elem.msRequestFullscreen) { /* IE/Edge */
+        elem.msRequestFullscreen();
+    }
+}
+
+if (document.addEventListener) {
+    document.addEventListener('fullscreenchange', exitHandler, false);
+    document.addEventListener('mozfullscreenchange', exitHandler, false);
+    document.addEventListener('MSFullscreenChange', exitHandler, false);
+    document.addEventListener('webkitfullscreenchange', exitHandler, false);
+}
+
+function exitHandler() {
+    if (!document.webkitIsFullScreen && !document.mozFullScreen && !document.msFullscreenElement ) {
+       fire_event('close_fullscreen',Date.now());
+    }
+}
+
+window.addEventListener('beforeunload', function (e) {
+    e.preventDefault();
+    e.returnValue = '';
+    fire_event('beforeunload', Date.now());
+});
+
+const logError = error => console.warn("Whoops! Error:", error);
+
+</script>

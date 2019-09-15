@@ -22,8 +22,12 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
 
 development:
-  <<: *default
-  database: action-cable-signaling-server_development
+  adapter: postgresql
+  encoding: utf8
+  database: action_cable_signaling_server_development
+  username: postgres
+  password: password
+  timeout: 5000
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
