@@ -20,6 +20,7 @@ gem 'figaro',             '~> 1.1', '>= 1.1.1'
 gem 'json',               '~> 2.1'
 gem 'rails_real_favicon', '~> 0.0.7'
 gem 'rest-client',        '~> 2.0', '>= 2.0.2'
+gem 'carrierwave'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console

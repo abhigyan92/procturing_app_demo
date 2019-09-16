@@ -2,8 +2,7 @@ Welcome to the test.
 <span data-user-id="<%= @user.id %>"></span>
 <video id="local-video" autoplay></video>
 <button id="a">alert</button>
-<button onclick="handleStopRecording()">Stop Recording</button>
-<%= link_to "Submit Test", display_activity_log_path(@user) %>
+<button id="submit-test"> Submit Test </button>
 <script type="text/javascript">
 let localVideo;
 let el;
@@ -11,19 +10,26 @@ window.onload = () => {
   localVideo = document.getElementById("local-video");
 };
 var recordedChunks = [];
-function handleStopRecording(){
+function handleStopRecording(e){
   console.log(recordedChunks);
   var blob = new Blob(recordedChunks, {
     type: 'video/webm'
   });
   var url = URL.createObjectURL(blob);
   console.log(url);
-  var a = document.createElement('a');
-  document.body.appendChild(a);
-  a.style = 'display: none';
-  a.href = url;
-  a.download = 'test.webm';
-  a.click();
+  var formData = new FormData();
+  formData.append('recording[video]', blob)
+  el = document.querySelector('span');
+  var userId = el.getAttribute('data-user-id');
+  console.log(userId);
+  formData.append('recording[user_id]', userId)
+  $.ajax({
+      type: "POST",
+      url: "/save_recording",
+      data: formData,
+      processData: false,
+      contentType: false
+  });
   window.URL.revokeObjectURL(url);
   window.mediaRecorder.stop();
 
@@ -69,6 +75,13 @@ document.onreadystatechange = () => {
   document.getElementById('a').addEventListener('click', function(){
       openFullscreen();
   })
+  document.getElementById("submit-test").addEventListener("click", function(){
+    handleStopRecording();
+    el = document.querySelector('span');
+    var userId = el.getAttribute('data-user-id');
+    window.location.href = '/display_activity_log/' + userId;
+  });
+
 };
 
 
