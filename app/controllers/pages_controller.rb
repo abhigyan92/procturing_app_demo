@@ -8,26 +8,29 @@ class PagesController < ApplicationController
     if !@user.present?
       @user = User.create(email: params[:email])
     end
-    redirect_to take_test_path(@user)
+    @submission = @user.submissions.create
+    redirect_to take_test_path(@submission)
   end
 
   def take_test
-    @user = User.find(params[:user_id])
+    @submission = Submission.find(params[:submission_id])
+    @user = @submission.user
   end
 
   def display_activity_log
     @user = User.find(params[:user_id])
-    @procturing_events = @user.procturing_events
-
+    @submissions = @user.submissions
   end
 
   def record_event
-    permitted = params.permit(:name, :value, :userId)
-    @user = User.find(permitted[:userId])
-    @procturing_event = @user.procturing_events.build
+    permitted = params.permit(:name, :value, :submissionID)
+    @submission = Submission.find(permitted[:submissionID])
+    @user = @submission.user
+    @procturing_event = @submission.procturing_events.build
     @procturing_event.name = permitted[:name]
     @procturing_event.value = permitted[:value]
+    @procturing_event.user_id = @user.id
     @procturing_event.save
-    render :json => @procuring_event
+    render :json => @procturing_event
   end
 end
