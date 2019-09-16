@@ -1,6 +1,4 @@
-
 <div class="d-flex align-items-center flex-column">
-<%= link_to 'Download recording', @recording.video.url %>
 <h2>Activities</h2>
 <label class="text-info"><%= @user.email %> </label>
 <table class="table table-striped w-75">
@@ -11,9 +9,10 @@
   </tr>
   <% @submissions.each do |s| %>
     <tr>
-      <td colspan="3" class="text-center">Test Submitted at <%= s.updated_at %></td>
+      <td colspan="2" class="text-center">Test Submitted at <%= s.updated_at %></td>
+      <td class="text-center"><%= link_to "View recording", s.test_recordings.last.video.url, target: "_blank" %></td>
     </tr>
-    <% s.procturing_events.each do |pe| %>
+    <% s.procturing_events.order(id: :asc).each do |pe| %>
       <tr>
         <td><%= pe.name %></td>
         <td><%= pe.value != 'undefined' ? pe.value : '--' %></td>
