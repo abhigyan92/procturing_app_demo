@@ -2,6 +2,7 @@ Welcome to the test.
 <span data-user-id="<%= @user.id %>"></span>
 <video id="local-video" autoplay></video>
 <button id="a">alert</button>
+<button onclick="handleStopRecording()">Stop Recording</button>
 <%= link_to "Submit Test", display_activity_log_path(@user) %>
 <script type="text/javascript">
 let localVideo;
@@ -34,11 +35,16 @@ function handleDataAvailable(event) {
     // ...
   }
 }
+
+function errorHandlerFunction(event){
+  console.log(event.error.name);
+}
 function startRecording(stream){
   var options = {mimeType: 'video/webm;codecs=vp9'};
   window.mediaRecorder = new MediaRecorder(stream, options);
   console.log(mediaRecorder);
   window.mediaRecorder.ondataavailable = handleDataAvailable;
+  window.mediaRecorder.onerror = errorHandlerFunction;
   window.mediaRecorder.start();
   console.log(mediaRecorder);
 }
