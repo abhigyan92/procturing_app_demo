@@ -19,7 +19,7 @@ class PagesController < ApplicationController
 
   def display_activity_log
     @user = User.find(params[:user_id])
-    @submissions = @user.submissions
+    @submissions = @user.submissions.order(created_at: :desc).all
   end
 
   def record_event
