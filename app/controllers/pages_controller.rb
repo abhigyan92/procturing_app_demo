@@ -20,6 +20,7 @@ class PagesController < ApplicationController
   def display_activity_log
     @user = User.find(params[:user_id])
     @submissions = @user.submissions.order(created_at: :desc).all
+    @recording = @user.test_recordings.last
   end
 
   def record_event
@@ -32,5 +33,14 @@ class PagesController < ApplicationController
     @procturing_event.user_id = @user.id
     @procturing_event.save
     render :json => @procturing_event
+  end
+
+  def save_recording
+    @recording = TestRecording.new(params.require(:recording).permit(:video, :user_id))
+    if @recording.save
+      render :json => @recording
+    else
+      render :json => {status: 500}
+    end
   end
 end

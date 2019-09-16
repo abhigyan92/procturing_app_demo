@@ -1,3 +1,4 @@
+
 <div class="d-flex justify-content-center py-5">
   <div class="d-flex flex-column p-5 bg-white border">
     <div class="d-flex justify-content-between mb-4">
@@ -5,7 +6,8 @@
         <label class="text-muted font-weight-bold text-large">Test is in progress...</label>
         <label class="small text-info">(<%= @user.email %>)</label>
       </div>
-      <%= link_to "Submit", display_activity_log_path(@user), class: "btn btn-success" %>
+      <button id="submit-test" class="btn btn-success"> Submit Test </button>
+
     </div>
     <div class="d-flex justify-content-between">
       <button onclick="handleStopRecording()" class="btn btn-danger">Stop Recording</button>
@@ -18,7 +20,7 @@
     <i class="fas fa-expand"></i>
   </button>
 </div>
-<span data-submission-id="<%= @submission.id %>"></span>
+<span data-submission-id="<%= @submission.id %>" data-user-id="<%= @user.id %>"></span>
 <script type="text/javascript">
 let localVideo;
 let el;
@@ -26,19 +28,26 @@ window.onload = () => {
   localVideo = document.getElementById("local-video");
 };
 var recordedChunks = [];
-function handleStopRecording(){
+function handleStopRecording(e){
   console.log(recordedChunks);
   var blob = new Blob(recordedChunks, {
     type: 'video/webm'
   });
   var url = URL.createObjectURL(blob);
   console.log(url);
-  var a = document.createElement('a');
-  document.body.appendChild(a);
-  a.style = 'display: none';
-  a.href = url;
-  a.download = 'test.webm';
-  a.click();
+  var formData = new FormData();
+  formData.append('recording[video]', blob)
+  el = document.querySelector('span');
+  var userId = el.getAttribute('data-user-id');
+  console.log(userId);
+  formData.append('recording[user_id]', userId)
+  $.ajax({
+      type: "POST",
+      url: "/save_recording",
+      data: formData,
+      processData: false,
+      contentType: false
+  });
   window.URL.revokeObjectURL(url);
   window.mediaRecorder.stop();
 
@@ -84,6 +93,13 @@ document.onreadystatechange = () => {
   document.getElementById('a').addEventListener('click', function(){
       openFullscreen();
   })
+  document.getElementById("submit-test").addEventListener("click", function(){
+    handleStopRecording();
+    el = document.querySelector('span');
+    var userId = el.getAttribute('data-user-id');
+    window.location.href = '/display_activity_log/' + userId;
+  });
+
 };
 
 
