@@ -1,8 +1,26 @@
-Welcome to the test.
-<span data-user-id="<%= @user.id %>"></span>
-<video id="local-video" autoplay></video>
-<button id="a">alert</button>
-<button id="submit-test"> Submit Test </button>
+
+<div class="d-flex justify-content-center py-5">
+  <div class="d-flex flex-column p-5 bg-white border">
+    <div class="d-flex justify-content-between mb-4">
+      <div class="d-flex justify-content-center align-items-start flex-column">
+        <label class="text-muted font-weight-bold text-large">Test is in progress...</label>
+        <label class="small text-info">(<%= @user.email %>)</label>
+      </div>
+      <button id="submit-test" class="btn btn-success"> Submit Test </button>
+
+    </div>
+    <div class="d-flex justify-content-between">
+      <button onclick="handleStopRecording()" class="btn btn-danger">Stop Recording</button>
+    </div>
+  </div>
+</div>
+<div class="mb-5 video-container">
+  <video id="local-video" autoplay></video>
+  <button id="a" class="btn fullscreen" title="Full screen">
+    <i class="fas fa-expand"></i>
+  </button>
+</div>
+<span data-submission-id="<%= @submission.id %>" data-user-id="<%= @user.id %>"></span>
 <script type="text/javascript">
 let localVideo;
 let el;
@@ -91,11 +109,11 @@ function fire_event(name,time,value){
     console.log('time -->', time);
     console.log('value -->', value);
     el = document.querySelector('span');
-    var userId = el.getAttribute('data-user-id');
+    var submissionId = el.getAttribute('data-submission-id');
     var xhttp = new XMLHttpRequest();
     xhttp.open("POST", "/record_event", true);
     xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xhttp.send("name=" + name + "&value=" + value + "&userId=" + userId);
+    xhttp.send("name=" + name + "&value=" + value + "&submissionID=" + submissionId);
 }
 document.addEventListener('DOMContentLoaded', function(){
     window.onunload = function(e){

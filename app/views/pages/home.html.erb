@@ -1,5 +1,14 @@
-<%= form_with(url: "/create_user", method: "post", html: {class: "d-flex flex-column"}) do %>
-  <%= label_tag(:email, "Email :") %>
-  <%= text_field_tag(:email) %>
-  <%= submit_tag("Start test") %>
-<% end %>
+<div class="d-flex justify-content-center pt-5">
+	<div class="d-flex flex-column p-5 bg-white border">
+		<div class="d-flex justify-content-center mb-4">
+			<label class="text-muted font-weight-bold text-large">Jigsaw Academy Procturing Demo</label>
+		</div>
+		<%= form_with(url: "/create_user", method: "post", html: {class: "d-flex flex-column"}) do %>
+			<div class="form-group bmd-form-group">
+			  <%= label_tag(:email, "Email :", class: "form-label bmd-form-label") %>
+			  <%= text_field_tag(:email, "", class: "form-control bmd-form-control") %>
+			</div>
+		  <%= submit_tag("Start test", class: "btn btn-raised btn-primary") %>
+		<% end %>
+	</div>
+</div>

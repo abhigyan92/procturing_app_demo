@@ -1,19 +1,26 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Action Cable Signaling Server</title>
+    <title>Procturing Demo - Jigsaw Academy</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <%= csrf_meta_tags %>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-material-design@4.1.1/dist/css/bootstrap-material-design.min.css">
+
+    <script data-search-pseudo-elements src="https://kit.fontawesome.com/59b42ae425.js"></script>
+
 
     <%= stylesheet_link_tag    'application', media: 'all' %>
     <%= javascript_include_tag 'application' %>
     <%= render 'application/favicon' %>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+    <script src="https://unpkg.com/popper.js@1.12.6/dist/umd/popper.js"></script>
+    <script src="https://unpkg.com/bootstrap-material-design@4.1.1/dist/js/bootstrap-material-design.js"></script>
+    <script>$(document).ready(function() { $('body').bootstrapMaterialDesign(); });</script>
   </head>
 
-  <body>
+  <body class="bg-light">
     <div class="container"><%= yield %></div>
   </body>
 </html>
