@@ -35,8 +35,14 @@ class PagesController < ApplicationController
     render :json => @procturing_event
   end
 
-  def save_recording
-    @recording = TestRecording.new(params.require(:recording).permit(:video, :user_id))
+  def submit_test
+    @submission = Submission.find(params[:submission_id])
+    @submission.status = "submitted"
+    @submission.submitted_at = DateTime.now
+    @submission.save
+    @recording = TestRecording.new(params.require(:recording).permit(:video))
+    @recording.user_id = @submission.user.id
+    @recording.submission_id = @submission.id
     if @recording.save
       render :json => @recording
     else
