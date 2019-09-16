@@ -26,6 +26,7 @@
     </div> -->
   </div>
 </div>
+<div class="loader"></div>
 <div class="mb-5 video-container">
   <video id="local-video" autoplay></video>
   <button id="a" class="btn fullscreen" title="Full screen">
@@ -40,13 +41,14 @@ window.onload = () => {
   localVideo = document.getElementById("local-video");
 };
 var recordedChunks = [];
+var submitted = false;
 function handleStopRecording(e){
-  console.log(recordedChunks);
+  $(".loader").addClass("visible");
   var blob = new Blob(recordedChunks, {
     type: 'video/webm'
   });
   var url = URL.createObjectURL(blob);
-  console.log(url);
+  // console.log(url);
   var formData = new FormData();
   formData.append('recording[video]', blob);
   $.ajax({
@@ -54,14 +56,18 @@ function handleStopRecording(e){
       url: "/submit_test/<%= @submission.id %>",
       data: formData,
       processData: false,
-      contentType: false
+      contentType: false,
+      success: function() {
+        submitted = true;
+        window.location.href = '/display_activity_log/<%= @user.id %>';
+      }
   });
   window.URL.revokeObjectURL(url);
   window.mediaRecorder.stop();
 
 }
 function handleDataAvailable(event) {
-  console.log(event.data);
+  // console.log(event.data);
   if (event.data.size > 0) {
     recordedChunks.push(event.data);
   } else {
@@ -75,11 +81,11 @@ function errorHandlerFunction(event){
 function startRecording(stream){
   var options = {mimeType: 'video/webm;codecs=vp9'};
   window.mediaRecorder = new MediaRecorder(stream, options);
-  console.log(mediaRecorder);
+  // console.log(mediaRecorder);
   window.mediaRecorder.ondataavailable = handleDataAvailable;
   window.mediaRecorder.onerror = errorHandlerFunction;
   window.mediaRecorder.start(100);
-  console.log(mediaRecorder);
+  // console.log(mediaRecorder);
 }
 
 // Initialize user's own video
@@ -93,7 +99,6 @@ document.onreadystatechange = () => {
       .then(stream => {
         localVideo.srcObject = stream;
         localVideo.muted = true;
-
         startRecording(stream);
       })
       .catch(logError);
@@ -103,9 +108,6 @@ document.onreadystatechange = () => {
   })
   document.getElementById("submit-test").addEventListener("click", function(){
     handleStopRecording();
-    el = document.querySelector('span');
-    var userId = el.getAttribute('data-user-id');
-    window.location.href = '/display_activity_log/' + userId;
   });
 
 };
@@ -113,9 +115,9 @@ document.onreadystatechange = () => {
 
 function fire_event(name,time,value){
     // do fetch request ot save data.
-    console.log('name -->', name);
-    console.log('time -->', time);
-    console.log('value -->', value);
+    // console.log('name -->', name);
+    // console.log('time -->', time);
+    // console.log('value -->', value);
     el = document.querySelector('span');
     var submissionId = el.getAttribute('data-submission-id');
     var xhttp = new XMLHttpRequest();
@@ -170,9 +172,11 @@ function exitHandler() {
 }
 
 window.addEventListener('beforeunload', function (e) {
-    e.preventDefault();
-    e.returnValue = '';
     fire_event('beforeunload', Date.now());
+    if (!submitted) {
+      e.preventDefault();
+      e.returnValue = "Navigating away will submit the test automatically!";
+    }
 });
 
 const logError = error => console.warn("Whoops! Error:", error);
