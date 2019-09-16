@@ -3,6 +3,8 @@
 		<div class="d-flex justify-content-center mb-4">
 			<label class="text-muted font-weight-bold text-large">Jigsaw Academy Procturing Demo</label>
 		</div>
+		<label class="text-info">This is a proof of concept demo for remote proctoring.</label>
+		<label class="text-info">Enter any email address to start the demo.</label>
 		<%= form_with(url: "/create_user", method: "post", html: {class: "d-flex flex-column"}) do %>
 			<div class="form-group bmd-form-group">
 			  <%= label_tag(:email, "Email :", class: "form-label bmd-form-label") %>

@@ -1,23 +1,25 @@
-<div class="d-flex align-items-center flex-column">
-<h2>Activities</h2>
-<label class="text-info"><%= @user.email %> </label>
-<table class="table table-striped w-75">
-  <tr>
-    <th>Event Name</th>
-    <th>Value</th>
-    <th>Time</th>
-  </tr>
-  <% @submissions.each do |s| %>
+<div class="d-flex align-items-center flex-column bg-white">
+  <h2>Activities</h2>
+  <label class="text-info"><%= @user.email %> </label>
+  <label class="text-warning">The categorization of your activities might look a little rustic right now. Bear with us.</label>
+  <table class="table table-striped w-75">
     <tr>
-      <td colspan="2" class="text-center">Test Submitted at <%= s.updated_at %></td>
-      <td class="text-center"><%= link_to "View recording", s.test_recordings.last.video.url, target: "_blank" %></td>
+      <th>Event Name</th>
+      <th>Value</th>
+      <th>Time</th>
     </tr>
-    <% s.procturing_events.order(id: :asc).each do |pe| %>
-      <tr>
-        <td><%= pe.name %></td>
-        <td><%= pe.value != 'undefined' ? pe.value : '--' %></td>
-        <td><%= pe.created_at %></td>
+    <% @submissions.each do |s| %>
+      <tr class="bg-success">
+        <td colspan="2" class="text-center text-white">Test Submitted at <%= s.updated_at %></td>
+        <td class="text-center"><%= link_to "View recording", s.test_recordings.last.video.url, target: "_blank", class: "text-white" %></td>
       </tr>
+      <% s.procturing_events.order(id: :asc).each do |pe| %>
+        <tr>
+          <td><%= pe.name %></td>
+          <td><%= pe.value != 'undefined' ? pe.value : '--' %></td>
+          <td><%= pe.created_at %></td>
+        </tr>
+      <% end %>
     <% end %>
-  <% end %>
-</table>
+  </table>
+</div>

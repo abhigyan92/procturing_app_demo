@@ -1,15 +1,29 @@
 <div class="d-flex justify-content-center py-5">
   <div class="d-flex flex-column p-5 bg-white border">
     <div class="d-flex justify-content-between mb-4">
-      <div class="d-flex justify-content-center align-items-start flex-column">
-        <label class="text-muted font-weight-bold text-large">Test is in progress...</label>
-        <label class="small text-info">(<%= @user.email %>)</label>
+      <label class="text-muted font-weight-bold text-large">Test is in progress...</label>
+      <label class="text-info">(<%= @user.email %>)</label>
+    </div>
+    <div class="d-flex flex-column p-3 border bg-light">
+      <label class="font-weight-bold">Please note:</label>
+      <label>1. Please allow the camera to be used.</label>
+      <label>2. Once you submit the test, camera will also stop automatically.</label>
+      <label>3. No authentication has been added, as this is demo only.</label>
+      <label>4. In production, you will not be able to go back by pressing the "back" button.</label>
+      <label>5. This demo captures following of your web browser activities:</label>
+      <div class="d-flex flex-column px-4">
+        <label>i.   Number of times you minimized the test browser.</label>
+        <label>ii.  Number of times you performed an alt-tab activity.</label>
+        <label>iii. Number of times you pressed Win-key to access another app.</label>
+        <label>iv.  Enable and disable video recording at start and stop of test respectively.</label>
       </div>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
       <button id="submit-test" class="btn btn-success">Submit Test</button>
     </div>
-    <div class="d-flex justify-content-between">
+    <!-- <div class="d-flex justify-content-between">
       <button onclick="handleStopRecording()" class="btn btn-danger">Stop Recording</button>
-    </div>
+    </div> -->
   </div>
 </div>
 <div class="mb-5 video-container">
