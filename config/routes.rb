@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   get 'display_activity_log/:user_id', to: 'pages#display_activity_log', as: 'display_activity_log'
   post 'create_user', to: 'pages#create_user'
   post 'record_event', to: 'pages#record_event'
-  post 'save_recording', to: 'pages#save_recording'
+  post 'submit_test/:submission_id', to: 'pages#submit_test'
 
 
   mount ActionCable.server, at: '/cable'

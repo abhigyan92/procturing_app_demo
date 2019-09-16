@@ -1,4 +1,3 @@
-
 <div class="d-flex justify-content-center py-5">
   <div class="d-flex flex-column p-5 bg-white border">
     <div class="d-flex justify-content-between mb-4">
@@ -6,8 +5,7 @@
         <label class="text-muted font-weight-bold text-large">Test is in progress...</label>
         <label class="small text-info">(<%= @user.email %>)</label>
       </div>
-      <button id="submit-test" class="btn btn-success"> Submit Test </button>
-
+      <button id="submit-test" class="btn btn-success">Submit Test</button>
     </div>
     <div class="d-flex justify-content-between">
       <button onclick="handleStopRecording()" class="btn btn-danger">Stop Recording</button>
@@ -36,14 +34,10 @@ function handleStopRecording(e){
   var url = URL.createObjectURL(blob);
   console.log(url);
   var formData = new FormData();
-  formData.append('recording[video]', blob)
-  el = document.querySelector('span');
-  var userId = el.getAttribute('data-user-id');
-  console.log(userId);
-  formData.append('recording[user_id]', userId)
+  formData.append('recording[video]', blob);
   $.ajax({
       type: "POST",
-      url: "/save_recording",
+      url: "/submit_test/<%= @submission.id %>",
       data: formData,
       processData: false,
       contentType: false
