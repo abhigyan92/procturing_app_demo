@@ -15,11 +15,14 @@ class PagesController < ApplicationController
   def take_test
     @submission = Submission.find(params[:submission_id])
     @user = @submission.user
+    if @submission.status == "submitted"
+      redirect_to display_activity_log_path(@user)
+    end
   end
 
   def display_activity_log
     @user = User.find(params[:user_id])
-    @submissions = @user.submissions.order(created_at: :desc).all
+    @submissions = @user.submissions.order(submitted_at: :desc).all
     @recording = @user.test_recordings.last
   end
 
