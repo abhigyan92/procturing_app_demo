@@ -17,6 +17,7 @@ function handleStopRecording(){
     type: 'video/webm'
   });
   var url = URL.createObjectURL(blob);
+  console.log(url);
   var a = document.createElement('a');
   document.body.appendChild(a);
   a.style = 'display: none';
@@ -45,7 +46,7 @@ function startRecording(stream){
   console.log(mediaRecorder);
   window.mediaRecorder.ondataavailable = handleDataAvailable;
   window.mediaRecorder.onerror = errorHandlerFunction;
-  window.mediaRecorder.start();
+  window.mediaRecorder.start(100);
   console.log(mediaRecorder);
 }
 
