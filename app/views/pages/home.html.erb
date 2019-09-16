@@ -1,4 +1,4 @@
-<%= form_with(url: "/create_user", method: "post") do %>
+<%= form_with(url: "/create_user", method: "post", html: {class: "d-flex flex-column"}) do %>
   <%= label_tag(:email, "Email :") %>
   <%= text_field_tag(:email) %>
   <%= submit_tag("Start test") %>
